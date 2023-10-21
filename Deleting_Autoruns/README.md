@@ -15,6 +15,39 @@ In addition to the Run and RunOnce keys, attackers might use other registry loca
 ## delete_gpo
 Deletes all GPO policies
 
+## enumerate_task_scheduler
+People love hiding things in the task scheduler. This is a script to enumerate all the tasks
+
+`Get-ScheduledTask | Format-Table -Property TaskName,TaskPath,State`
+
+For more information:
+```pwsh
+$outputPath = Join-Path -Path ([Environment]::GetFolderPath("MyDocuments")) -ChildPath "output.csv"
+
+Get-ScheduledTask | ForEach-Object {
+    $info = Get-ScheduledTaskInfo -TaskPath $_.TaskPath -TaskName $_.TaskName
+    $actions = $_.Actions
+
+    [PSCustomObject]@{
+        'TaskName'     = $_.TaskName
+        'TaskPath'     = $_.TaskPath
+        'Description'  = $_.Description
+        'State'        = $_.State
+        'Actions'      = ($actions | ForEach-Object { $_.Execute }) -join '; '
+        'Arguments'    = ($actions | ForEach-Object { $_.Arguments }) -join '; '
+    }
+} | Export-Csv -Path $outputPath -NoTypeInformation
+```
+
+## compare_task_scheduler
+Powershell to compare two files
+
+$file1Content = Import-Csv -Path 'path\to\file1.csv'
+$file2Content = Import-Csv -Path 'path\to\file2.csv'
+
+Compare-Object -ReferenceObject $file1Content -DifferenceObject $file2Content
+
+
 ## delete_task_scheduler
 Deletes all items in the task scheduler
 
