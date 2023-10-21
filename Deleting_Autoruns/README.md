@@ -1,22 +1,22 @@
 # Scripts related to deleting things that are probably malicious
 All scripts log themselves to the console
+
 ## delete_registry_run
-Deletes the registry keys for run and runOnce
+Deletes the registry keys in common auto-start locations
 
-1. delete_registry_startup:
+```
+"HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\Run",
+"HKLM:\SOFTWARE\Microsoft\Windows\CurrentVersion\RunOnce",
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\Run",
+"HKCU:\Software\Microsoft\Windows\CurrentVersion\RunOnce",
+"HKLM:\SOFTWARE\Wow6432Node\Microsoft\Windows\CurrentVersion\Run"
+```
 
-In addition to the Run and RunOnce keys, attackers might use other registry locations for persistence. Consider checking:
-
-    HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders
-    HKEY_LOCAL_MACHINE\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders
-    HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\Shell Folders
-    HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Explorer\User Shell Folders
-
-## delete_gpo
-Deletes all GPO policies
+## disable_GPO
+Disable all GPO policies, besides the ones created by the system user
 
 ## enumerate_task_scheduler
-People love hiding things in the task scheduler. This is a script to enumerate all the tasks
+People love hiding things in the task scheduler. This is a script to enumerate all the tasks and put them in the 
 
 `Get-ScheduledTask | Format-Table -Property TaskName,TaskPath,State`
 
