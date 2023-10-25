@@ -172,7 +172,7 @@ Set-MpPreference -MAPSReporting Advanced
 Write-Output "Microsoft Defender has been reset to its default state."
 
 # 7. Enumerate task scheduler into a csv file
-outputPath = Join-Path -Path ([Environment]::GetFolderPath("MyDocuments")) -ChildPath "taskSchedulerOutput.csv"
+$outputPath = Join-Path -Path ([Environment]::GetFolderPath("MyDocuments")) -ChildPath "taskSchedulerOutput.csv"
 
 Get-ScheduledTask | ForEach-Object {
     Get-ScheduledTaskInfo -TaskPath $_.TaskPath -TaskName $_.TaskName

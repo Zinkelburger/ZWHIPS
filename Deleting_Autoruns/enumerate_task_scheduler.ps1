@@ -1,4 +1,4 @@
-outputPath = Join-Path -Path ([Environment]::GetFolderPath("MyDocuments")) -ChildPath "taskSchedulerOutput.csv"
+$outputPath = Join-Path -Path ([Environment]::GetFolderPath("MyDocuments")) -ChildPath "taskSchedulerOutput.csv"
 
 Get-ScheduledTask | ForEach-Object {
     Get-ScheduledTaskInfo -TaskPath $_.TaskPath -TaskName $_.TaskName
