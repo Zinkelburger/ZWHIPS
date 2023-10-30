@@ -8,6 +8,7 @@ $sharesToRemove = $allShares | Where-Object {
 
 # Remove SMB shares
 $sharesToRemove | ForEach-Object {
+    Write-Host "Removing share: $($_.Name)"
     Remove-SmbShare -Name $_.Name -Force
     Write-Host "Removed share: $($_.Name)"
 }
