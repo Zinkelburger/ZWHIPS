@@ -1,3 +1,7 @@
+Restore all GPO to default?
+http://www.sysadminlab.net/windows/restore-default-domain-policy-and-default-domain-controller-gpo-settings-to-default
+
+
 gpresult /h report.html
 
 Generates a report of the GPO policies, can open in web browser.

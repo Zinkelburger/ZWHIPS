@@ -12,6 +12,8 @@ Add machine to domain, remove machine from domain.
 
 Add to teleport.
 
-Notify me whenever a new TCP connection is made.
+Notify me whenever a new TCP connection is made, registry key added, etc.
+
+Constantly scan?
 
 Enable logging?
