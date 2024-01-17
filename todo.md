@@ -1,5 +1,7 @@
 Make them all run from Ansible
 # Scripts I should make
+Delete ssh keys, save to a file in the admin directory
+
 Scan directories for anything not signed by microsoft, mark it for removal. Remove obvious things like mesh agent and tacticalrmm
 
 Change Kerberos password, mitigates Mimikatz?

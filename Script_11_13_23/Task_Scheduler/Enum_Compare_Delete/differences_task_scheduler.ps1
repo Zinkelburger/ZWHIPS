@@ -1,3 +1,4 @@
+# Run from documents folder!!
 # Define the paths
 $outputPath = Join-Path -Path ([Environment]::GetFolderPath("MyDocuments")) -ChildPath "taskSchedulerOutput.csv"
 $validTaskPath = Join-Path -Path (Get-Location) -ChildPath "validTaskScheduler.csv"

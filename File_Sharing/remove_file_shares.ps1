@@ -1,14 +1,24 @@
-# Get all SMB shares
-$allShares = Get-SmbShare
+$logFile = [System.Environment]::GetFolderPath("MyDocuments") + "\ShareRemovalLog.txt"
 
-# Filter out only NFS shares
-$sharesToRemove = $allShares | Where-Object {
-    $_.ShareType -ne "NFS"
+# Create the log file if it doesn't exist
+if (-not (Test-Path $logFile)) {
+    New-Item -Path $logFile -ItemType File
 }
 
-# Remove SMB shares
-$sharesToRemove | ForEach-Object {
-    Write-Host "Removing share: $($_.Name)"
-    Remove-SmbShare -Name $_.Name -Force
-    Write-Host "Removed share: $($_.Name)"
+# Doesn't remove shares that end with $ as default system shares end with a $
+Get-SmbShare | Where-Object { $_.Name -notmatch '^\w+\$$' } | ForEach-Object {
+    $shareName = $_.Name
+    $sharePath = $_.Path
+    
+    # Get share permissions
+    $permissions = Get-SmbShareAccess -Name $shareName
+    $permissionsText = $permissions | ForEach-Object { "$($_.AccountName): $($_.AccessRight)" } | Out-String
+    $permissionsText = $permissionsText.Trim()
+
+    # Remove the share
+    Remove-SmbShare -Name $shareName -Force
+
+    # Log the removed share with permissions
+    $logEntry = "$(Get-Date) - Removed SMB share: Name = $shareName, Path = $sharePath, Permissions: $permissionsText"
+    Add-Content -Path $logFile -Value $logEntry
 }

@@ -10,7 +10,7 @@
 # 1. Disable all local & domain account
 # Disable all local user accounts
 $currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$excludedAccounts = @("black team") # Add any other accounts to this array if needed
+$excludedAccounts = @("black-team") # Add any other accounts to this array if needed
 
 Get-WmiObject -Class Win32_UserAccount -Filter "LocalAccount='True'" | 
 Where-Object { $_.Name -ne $currentUser.Split('\')[1] -and $excludedAccounts -notcontains $_.Name } | 
