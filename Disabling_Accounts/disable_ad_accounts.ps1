@@ -1,18 +1,8 @@
-# Disable all local user accounts
-$currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
-$excludedAccounts = @("black team") # Add any other accounts to this array if needed
-
-Get-WmiObject -Class Win32_UserAccount -Filter "LocalAccount='True'" | 
-Where-Object { $_.Name -ne $currentUser.Split('\')[1] -and $excludedAccounts -notcontains $_.Name } | 
-ForEach-Object {
-    $username = $_.Name
-    net user $username /active:no
-    Write-Host "Disabled local account: $username"
-}
+# Disable all domain user accounts except specified exclusions
 
 # If ActiveDirectory module isn't loaded, try to import it
 $ActiveDirectoryModuleAvailable = $true
-if (-not (Get-Module ActiveDirectory)) {
+if (-not (Get-Module -Name ActiveDirectory -ErrorAction SilentlyContinue)) {
     try {
         Import-Module ActiveDirectory
     } catch {
@@ -21,8 +11,12 @@ if (-not (Get-Module ActiveDirectory)) {
     }
 }
 
-# Disable all AD accounts except the current one and the excluded accounts, only if ActiveDirectory module is available
+# Disable AD accounts, if ActiveDirectory module is available
 if ($ActiveDirectoryModuleAvailable) {
+    # Current user and excluded accounts
+    $currentUser = [System.Security.Principal.WindowsIdentity]::GetCurrent().Name
+    $excludedAccounts = @("black team") # Add any other accounts to this array if needed
+
     try {
         Get-ADUser -Filter * | 
         Where-Object { $_.SamAccountName -ne $currentUser.Split('\')[1] -and $excludedAccounts -notcontains $_.SamAccountName } | 
