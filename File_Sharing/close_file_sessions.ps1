@@ -1,1 +1,1 @@
-Get-SmbSession | Where-Object { $_.ClientComputerName -eq "ComputerName" } | Close-SmbSession
+Get-SmbSession | Close-SmbSession
