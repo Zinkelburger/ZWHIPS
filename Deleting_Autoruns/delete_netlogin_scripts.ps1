@@ -1,4 +1,5 @@
 # PowerShell script to move files from the Imports/Scripts to the current user's MyDocuments\Netlogon
+# Can only be run on the domain controller
 
 # Define source directory
 $SourceDir = Join-Path $env:SystemRoot "System32\Repl\Imports\Scripts"
