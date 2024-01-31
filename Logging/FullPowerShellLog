@@ -1,0 +1,26 @@
+# Navigate to "Windows PowerShell" Settings
+$windowsPowerShellGPOPath = "HKLM:\Software\Policies\Microsoft\Windows\PowerShell"
+$windowsPowerShellGPOKey = "ComputerConfigurationPoliciesAdministrativeTemplatesWindowsComponentsWindowsPowerShell"
+
+# Enable "Turn on Module Logging"
+$moduleLoggingGPO = "$windowsPowerShellGPOPath\ModuleLogging"
+Set-ItemProperty -Path $moduleLoggingGPO -Name "EnableModuleLogging" -Value "1"
+Set-ItemProperty -Path $moduleLoggingGPO -Name "EnableModuleNames" -Value "1"
+Set-ItemProperty -Path $moduleLoggingGPO -Name "ModuleNames" -Value "*"
+
+# Enable Script Block Logging
+$scriptBlockLoggingGPO = "$windowsPowerShellGPOPath\ScriptBlockLogging"
+Set-ItemProperty -Path $scriptBlockLoggingGPO -Name "EnableScriptBlockLogging" -Value "1"
+
+# Enable Transcription
+$transcriptionGPO = "$windowsPowerShellGPOPath\Transcription"
+Set-ItemProperty -Path $transcriptionGPO -Name "EnableTranscripting" -Value "1"
+Set-ItemProperty -Path $transcriptionGPO -Name "IncludeInvocationHeader" -Value "1"
+
+# Enable Script Execution (Optional)
+$scriptExecutionGPO = "$windowsPowerShellGPOPath\ExecutionPolicy"
+Set-ItemProperty -Path $scriptExecutionGPO -Name "EnableScriptExecution" -Value "1"
+Set-ItemProperty -Path $scriptExecutionGPO -Name "ExecutionPolicy" -Value "Unrestricted"
+
+# Force Group Policy update
+gpupdate /force
