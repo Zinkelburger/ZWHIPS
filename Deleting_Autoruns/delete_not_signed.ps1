@@ -11,29 +11,26 @@ if (-not (Test-Path -Path $PotentialMalwareDir)) {
 # Log file location
 $LogFile = "$PotentialMalwareDir\MalwareLog.txt"
 
-# Scan the system for executables
-$Executables = Get-ChildItem -Path C:\ -Include *.exe -Recurse -ErrorAction SilentlyContinue
+# Scan the system for executables and scr (which are also exes)
+$Executables = Get-ChildItem -Path C:\ -Include *.exe, *.scr -Recurse -ErrorAction SilentlyContinue
 
 foreach ($Executable in $Executables) {
-    # Skip if the file is not an executable or is part of the Windows folder
-    if ($Executable.DirectoryName -like "C:\Windows*") {
-        continue
-    }
+    # Check if the item is a file
+    if ($Executable -is [System.IO.FileInfo]) {
+        $Signature = Get-AuthenticodeSignature -FilePath $Executable.FullName
+        if ($Signature.Status -ne "Valid" -or $Signature.SignerCertificate -notmatch "Microsoft Corporation|Wazuh|Mozilla|Sysinternals|Amazon|Norton") {
+            # Attempt to kill the process if running
+            $Process = Get-Process | Where-Object { $_.Path -eq $Executable.FullName }
+            if ($Process) {
+                Stop-Process -Id $Process.Id -Force -ErrorAction SilentlyContinue
+            }
 
-    # Check if the file is signed and the signer is not Microsoft
-    $Signature = Get-AuthenticodeSignature -FilePath $Executable.FullName
-    if ($Signature.Status -ne "Valid" -or $Signature.SignerCertificate -notlike "*Microsoft Corporation*") {
-        # Attempt to kill the process if running
-        $Process = Get-Process | Where-Object { $_.Path -eq $Executable.FullName }
-        if ($Process) {
-            Stop-Process -Id $Process.Id -Force -ErrorAction SilentlyContinue
+            # Log the original location of the executable
+            Add-Content -Path $LogFile -Value "Moved Malicious File: $($Executable.FullName) to $PotentialMalwareDir"
+
+            # Move the file to the PotentialMalware directory
+            Move-Item -Path $Executable.FullName -Destination $PotentialMalwareDir -Force -ErrorAction SilentlyContinue
         }
-
-        # Log the original location of the executable
-        Add-Content -Path $LogFile -Value "Moved Malicious File: $($Executable.FullName) to $PotentialMalwareDir"
-
-        # Move the file to the PotentialMalware directory
-        Move-Item -Path $Executable.FullName -Destination $PotentialMalwareDir -Force -ErrorAction SilentlyContinue
     }
 }
 

@@ -1,8 +1,11 @@
-# prereq: vts.csv has been placed in the user's Documents directory (vts stands for Valid Task Scheduler)
-# potentiall blocking, as it asks for user input if there are more than 5 lines to remove
-$outputPath = Join-Path -Path ([Environment]::GetFolderPath("MyDocuments")) -ChildPath "taskSchedulerOutput.csv"
-$validTaskPath = Join-Path -Path ([Environment]::GetFolderPath("MyDocuments")) -ChildPath "validTaskScheduler.csv"
-$linesToRemovePath = Join-Path -Path ([Environment]::GetFolderPath("MyDocuments")) -ChildPath "linesToRemove.csv"
+# potentially blocking, as it asks for user input if there are more than 5 lines to remove
+$DocumentsPath = [Environment]::GetFolderPath("MyDocuments")
+$OutFile = Join-Path -Path $DocumentsPath -ChildPath "validTaskScheduler.csv"
+Invoke-WebRequest -Uri "https://github.com/Zinkelburger/ZWHIPS/blob/main/Deleting_Autoruns/validTaskScheduler1.csv?plain=1" -OutFile $OutFile
+
+$outputPath = Join-Path -Path $DocumentsPath -ChildPath "taskSchedulerOutput.csv"
+$validTaskPath = Join-Path -Path $DocumentsPath -ChildPath "validTaskScheduler.csv"
+$linesToRemovePath = Join-Path -Path $DocumentsPath -ChildPath "linesToRemove.csv"
 
 # Gather current task information
 Get-ScheduledTask | ForEach-Object {
