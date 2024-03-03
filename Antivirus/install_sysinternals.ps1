@@ -7,7 +7,7 @@ $extractPath = "$env:USERPROFILE\Documents\Sysinternals"
 $importantToolsPath = "$env:USERPROFILE\Documents\Important-Sysinternals"
 
 # Relevant Sysinternals tools to copy
-$importantTools = @('procexp64a.exe, Procmon64a.exe', 'PsLoggedOn.exe', 'LogonSessions.exe', 'AccessChk.exe', 'VMMap.exe', 'Sigcheck.exe', 'Tcpview.exe', 'PsService.exe')
+$importantTools = @('procexp64.exe, Procmon64.exe', 'Autoruns64.exe', 'PsLoggedOn.exe', 'LogonSessions.exe', 'AccessChk.exe', 'VMMap.exe', 'Sigcheck.exe', 'Tcpview.exe', 'PsService.exe')
 
 # Download the zip file
 Invoke-WebRequest -Uri $url -OutFile $destination
